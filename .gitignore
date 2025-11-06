@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.output/
+.env
+.DS_Store
+.vscode/
+.astro/
+npm-debug.log*
+desktop.ini

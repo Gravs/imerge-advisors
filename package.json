@@ -1,0 +1,21 @@
+{
+  "name": "imerge-advisors",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.15.3",
+    "@astrojs/cloudflare": "^12.6.10",
+    "graphql": "^16.9.0",
+    "graphql-request": "^7.1.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}

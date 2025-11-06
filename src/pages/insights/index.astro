@@ -1,0 +1,179 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { graphqlClient, GET_POSTS } from '../lib/wordpress';
+
+// Fetch all posts from WordPress
+let posts = [];
+try {
+  const data = await graphqlClient.request(GET_POSTS, { first: 100 });
+  posts = data.posts.nodes;
+} catch (error) {
+  console.error('Error fetching posts:', error);
+}
+---
+
+<Layout title="Insights - iMerge Advisors">
+  <div class="page-header">
+    <div class="container">
+      <h1>Insights & Perspectives</h1>
+      <p class="subtitle">Industry analysis, market trends, and strategic insights from our team</p>
+    </div>
+  </div>
+
+  <div class="container posts-container">
+    {posts.length === 0 ? (
+      <p class="no-posts">No insights available at this time.</p>
+    ) : (
+      <div class="posts-grid">
+        {posts.map((post) => (
+          <article class="post-card">
+            {post.featuredImage?.node?.sourceUrl && (
+              <div class="post-image">
+                <img 
+                  src={post.featuredImage.node.sourceUrl} 
+                  alt={post.featuredImage.node.altText || post.title}
+                />
+              </div>
+            )}
+            <div class="post-content">
+              <div class="post-meta">
+                {post.categories?.nodes?.[0] && (
+                  <span class="category">{post.categories.nodes[0].name}</span>
+                )}
+                <span class="date">{new Date(post.date).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}</span>
+              </div>
+              <h2>{post.title}</h2>
+              <div class="excerpt" set:html={post.excerpt} />
+              <a href={`/insights/${post.slug}`} class="read-more">Read More →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>
+
+<style>
+  .page-header {
+    background: linear-gradient(135deg, #254a73 0%, #336699 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .page-header h1 {
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .posts-container {
+    padding: 4rem 2rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .category {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .date {
+    color: var(--text-light);
+  }
+
+  .post-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-dark);
+  }
+
+  .excerpt {
+    color: var(--text-gray);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+
+  .excerpt :global(p) {
+    margin: 0;
+  }
+
+  .read-more {
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: auto;
+  }
+
+  .no-posts {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-gray);
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-header {
+      padding: 3rem 0;
+    }
+  }
+</style>

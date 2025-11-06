@@ -1,0 +1,267 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Strategic advisory and consulting services' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <style is:global>
+      :root {
+        --primary: #336699;
+        --primary-dark: #254a73;
+        --primary-light: #4d7fb3;
+        --text-dark: #1a1a1a;
+        --text-gray: #4a4a4a;
+        --text-light: #6a6a6a;
+        --bg-white: #ffffff;
+        --bg-gray-light: #f8f9fa;
+        --bg-gray: #e9ecef;
+        --border-gray: #dee2e6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: var(--bg-white);
+        color: var(--text-dark);
+        line-height: 1.6;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--text-dark);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 0.875rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        margin-bottom: 1rem;
+        color: var(--text-gray);
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      a:hover {
+        color: var(--primary-dark);
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="main-nav">
+        <div class="container nav-container">
+          <a href="/" class="logo">
+            <strong>iMerge Advisors</strong>
+          </a>
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/team">Team</a></li>
+            <li><a href="/insights">Insights</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <div class="footer-section">
+          <h4>iMerge Advisors</h4>
+          <p>Strategic advisory and consulting services for growth-oriented businesses.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>
+            Email: <a href="mailto:info@imergeadvisors.com">info@imergeadvisors.com</a>
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>Follow Us</h4>
+          <div class="social-links">
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="container">
+          <p>&copy; {new Date().getFullYear()} iMerge Advisors. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      header {
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-gray);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .main-nav {
+        padding: 1rem 0;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        color: var(--text-dark);
+        font-weight: 500;
+        padding: 0.5rem 0;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+      }
+
+      main {
+        min-height: 60vh;
+      }
+
+      footer {
+        background: var(--text-dark);
+        color: var(--bg-white);
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 3rem 2rem;
+      }
+
+      .footer-section h4 {
+        color: var(--bg-white);
+        margin-bottom: 1rem;
+      }
+
+      .footer-section p {
+        color: #b8b8b8;
+        font-size: 0.9rem;
+      }
+
+      .footer-section a {
+        color: var(--primary-light);
+      }
+
+      .footer-section a:hover {
+        color: var(--bg-white);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #333;
+        padding: 1.5rem 0;
+        text-align: center;
+      }
+
+      .footer-bottom p {
+        color: #888;
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+    </style>
+  </body>
+</html>

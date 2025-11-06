@@ -1,0 +1,331 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { graphqlClient, GET_POSTS } from '../lib/wordpress';
+
+// Fetch latest posts from WordPress
+let posts = [];
+try {
+  const data = await graphqlClient.request(GET_POSTS, { first: 3 });
+  posts = data.posts.nodes;
+} catch (error) {
+  console.error('Error fetching posts:', error);
+}
+---
+
+<Layout title="iMerge Advisors - Strategic Advisory Services">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>Strategic Advisory<br/>for Growth-Oriented Businesses</h1>
+      <p class="hero-subtitle">
+        We provide specialized M&A, capital markets, and strategic advisory services 
+        to help middle-market companies achieve their most ambitious goals.
+      </p>
+      <div class="hero-cta">
+        <a href="/contact" class="btn btn-primary">Get in Touch</a>
+        <a href="/services" class="btn btn-secondary">Our Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition -->
+  <section class="section services-preview">
+    <div class="container">
+      <h2 class="section-title">How We Help</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>M&A Advisory</h3>
+          <p>Strategic guidance through every phase of mergers and acquisitions, from valuation to closing.</p>
+          <a href="/services/ma-advisory">Learn More →</a>
+        </div>
+        <div class="service-card">
+          <h3>Capital Markets</h3>
+          <p>Access to flexible debt and equity solutions to fuel your company's growth trajectory.</p>
+          <a href="/services/capital-markets">Learn More →</a>
+        </div>
+        <div class="service-card">
+          <h3>Strategic Advisory</h3>
+          <p>Expert counsel on strategic planning, market positioning, and value creation initiatives.</p>
+          <a href="/services/strategic-advisory">Learn More →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Insights -->
+  {posts.length > 0 && (
+    <section class="section insights-section">
+      <div class="container">
+        <h2 class="section-title">Latest Insights</h2>
+        <div class="insights-grid">
+          {posts.map((post) => (
+            <article class="insight-card">
+              {post.featuredImage?.node?.sourceUrl && (
+                <div class="insight-image">
+                  <img 
+                    src={post.featuredImage.node.sourceUrl} 
+                    alt={post.featuredImage.node.altText || post.title}
+                  />
+                </div>
+              )}
+              <div class="insight-content">
+                <div class="insight-meta">
+                  {post.categories?.nodes?.[0] && (
+                    <span class="category">{post.categories.nodes[0].name}</span>
+                  )}
+                  <span class="date">{new Date(post.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</span>
+                </div>
+                <h3>{post.title}</h3>
+                <div class="excerpt" set:html={post.excerpt} />
+                <a href={`/insights/${post.slug}`} class="read-more">Read More →</a>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="cta-center">
+          <a href="/insights" class="btn btn-secondary">View All Insights</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container cta-content">
+      <h2>Ready to Explore Your Options?</h2>
+      <p>Let's discuss how we can help you achieve your strategic objectives.</p>
+      <a href="/contact" class="btn btn-primary">Schedule a Consultation</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, #254a73 0%, #336699 100%);
+    color: white;
+    padding: 6rem 0;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .btn-primary {
+    background: white;
+    color: var(--primary);
+  }
+
+  .btn-primary:hover {
+    background: var(--bg-gray-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .btn-secondary:hover {
+    background: white;
+    color: var(--primary);
+  }
+
+  .section {
+    padding: 4rem 0;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-dark);
+  }
+
+  .services-preview {
+    background: var(--bg-gray-light);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .service-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .service-card h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+
+  .service-card p {
+    margin-bottom: 1.5rem;
+  }
+
+  .service-card a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .insight-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .insight-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .insight-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .insight-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .insight-content {
+    padding: 1.5rem;
+  }
+
+  .insight-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .category {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .date {
+    color: var(--text-light);
+  }
+
+  .insight-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .excerpt {
+    color: var(--text-gray);
+    margin-bottom: 1rem;
+  }
+
+  .excerpt :global(p) {
+    margin: 0;
+  }
+
+  .read-more {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .cta-center {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .cta-section {
+    background: var(--bg-gray-light);
+    text-align: center;
+  }
+
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-content h2 {
+    margin-bottom: 1rem;
+  }
+
+  .cta-content p {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 4rem 0;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+
+    .services-grid,
+    .insights-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
